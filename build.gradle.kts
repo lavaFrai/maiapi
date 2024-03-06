@@ -2,6 +2,7 @@ plugins {
     kotlin("jvm") version "1.8.21"
 
     id("maven-publish")
+    kotlin("plugin.serialization") version "1.6.20"
 }
 
 group = "ru.lavafrai.mai.api"
@@ -11,13 +12,17 @@ repositories {
     mavenCentral()
 }
 
+
 dependencies {
     testImplementation(kotlin("test"))
     implementation("org.jsoup:jsoup:1.10.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+    // implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
+
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 
 }
+
 
 tasks.test {
     useJUnitPlatform()
