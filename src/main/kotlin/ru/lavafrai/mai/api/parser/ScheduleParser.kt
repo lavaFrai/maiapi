@@ -103,23 +103,18 @@ fun subParseLesson(page: Element, teachers: MutableList<TeacherLink>): ScheduleL
         "Экзамен" -> ScheduleLessonType.EXAM
         else -> ScheduleLessonType.Unknown
     }
-
     val name = page.child(0).text().removeSuffix(" ${page.select(".badge").text()}")
     val timeRange = page.child(1).child(0).text()
 
-    val teacher: String
-    val location: String
-    if (page.child(1).children().size == 3) {
-        teacher = page.child(1).child(1).text()
-
-        val teacherLink = page.child(1).child(1).select("a").attr("href")
-        teachers.add(TeacherLink(teacher, teacherLink))
-
-        location = page.child(1).child(2).text()
-    } else {
-        teacher = ""
-        location = page.child(1).child(1).text()
+    val teacherFinder = "(?>(?>(?!\\d)\\S)+\\s){3}".toRegex()
+    val teacher = teacherFinder.findAll(page.child(1).text()).joinToString(separator = " / ") { it.value.trim().lowercase().capitalizeWords() }
+    page.child(1).select("a").forEach {
+        teachers.add(TeacherLink(it.text(), it.attr("href")))
     }
+
+    //println(page.child(1).text())
+
+    val location: String = page.child(1).select(".fa-map-marker-alt").joinToString(separator = " / ") { it.parent().text() }
 
     return ScheduleLesson(name, timeRange, type, teacher, location)
 }
@@ -130,4 +125,4 @@ fun parseScheduleParseWeeks(group: Group): List<ScheduleWeekId> {
     return page.select("#collapseWeeks").select(".list-group-item").map { parseScheduleWeek(it.text()) }
 }
 
-
+fun String.capitalizeWords(): String = split(" ").joinToString(" ") { it.capitalize() }
