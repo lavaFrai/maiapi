@@ -109,7 +109,8 @@ fun subParseLesson(page: Element, teachers: MutableList<TeacherLink>): ScheduleL
     val teacherFinder = "(?>(?>(?!\\d)\\S)+\\s){3}".toRegex()
     val teacher = teacherFinder.findAll(page.child(1).text()).joinToString(separator = " / ") { it.value.trim().lowercase().capitalizeWords() }
     page.child(1).select("a").forEach {
-        teachers.add(TeacherLink(it.text(), it.attr("href")))
+        val newTeacherLink = TeacherLink(it.text(), it.attr("href"))
+        if (teachers.find { newTeacherLink.name == it.name } == null) teachers.add(newTeacherLink)
     }
 
     //println(page.child(1).text())

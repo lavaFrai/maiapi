@@ -1,5 +1,7 @@
 package ru.lavafrai.mai.api.models
 
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Test
 import ru.lavafrai.mai.api.Api
 import ru.lavafrai.mai.api.models.group.Group
@@ -10,7 +12,7 @@ class TeacherTest {
     fun `Parse teacher links`() {
         val api = Api.getInstance()
         api.getSchedule(Group("М4О-106Б-23"))
-        println(api.getTeachersList())
+        println(Json.encodeToString(api.getTeachersList()))
     }
 
     @Test
