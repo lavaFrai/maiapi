@@ -1,37 +1,64 @@
 package ru.lavafrai.mai.api.parser
 
 import org.jsoup.nodes.Element
+import ru.lavafrai.mai.api.SCHEDULE_PAGE_URL
 import ru.lavafrai.mai.api.models.SerializableDate
 import ru.lavafrai.mai.api.models.group.Group
 import ru.lavafrai.mai.api.models.schedule.*
+import ru.lavafrai.mai.api.models.schedule.network.getPage
 import ru.lavafrai.mai.api.models.schedule.network.getSchedulePage
 import java.time.DayOfWeek
 import java.util.*
 
 
-fun parseSchedule(group: Group) : Schedule {
+fun parseSchedule(group: Group, teachers: MutableList<TeacherLink> = mutableListOf()) : Schedule {
     val weeks = parseScheduleParseWeeks(group)
 
     val schedules = weeks.map {
-        parseScheduleParseWeek(group, it)
+        parseScheduleParseWeek(group, it, teachers)
     }
 
     return Schedule(group, schedules);
 }
 
 
-fun parseScheduleParseWeek(group: Group, weekId: ScheduleWeekId): OneWeekSchedule {
-    val page = getSchedulePage(mapOf("group" to group.name, "week" to weekId.number.toString()))
+fun parseTeacherSchedule(link: TeacherLink, teachers: MutableList<TeacherLink> = mutableListOf()) : Schedule {
+    val weeks = parseScheduleParseWeeksByUrl(link)
+
+    val schedules = weeks.map {
+        parseScheduleParseWeekByUrl("https://mai.ru/" + link.link, it, teachers)
+    }
+
+    return Schedule(Group(link.name), schedules);
+}
+
+
+fun parseScheduleParseWeekByUrl(url: String, weekId: ScheduleWeekId, teachers: MutableList<TeacherLink>): OneWeekSchedule {
+    val page = getPage(url)
 
     val lessons = page.select(".step").select(".step-content").map {
-        subParseOneDaySchedule(
-            it
-        )
+        subParseOneDaySchedule(it, teachers)
     }
     return OneWeekSchedule(weekId, lessons)
 }
 
-fun subParseOneDaySchedule(page: Element): OneDaySchedule {
+fun parseScheduleParseWeeksByUrl(link: TeacherLink): List<ScheduleWeekId> {
+    val page = getPage("https://mai.ru/" + link.link)
+
+    return page.select("#collapseWeeks").select(".list-group-item").map { parseScheduleWeek(it.text()) }
+}
+
+
+fun parseScheduleParseWeek(group: Group, weekId: ScheduleWeekId, teachers: MutableList<TeacherLink>): OneWeekSchedule {
+    val page = getSchedulePage(mapOf("group" to group.name, "week" to weekId.number.toString()))
+
+    val lessons = page.select(".step").select(".step-content").map {
+        subParseOneDaySchedule(it, teachers)
+    }
+    return OneWeekSchedule(weekId, lessons)
+}
+
+fun subParseOneDaySchedule(page: Element, teachers: MutableList<TeacherLink>): OneDaySchedule {
     val day = page.select(".step-title").text()
     val dayOfWeek = when {
         day.startsWith("Пн") -> DayOfWeek.MONDAY
@@ -44,7 +71,7 @@ fun subParseOneDaySchedule(page: Element): OneDaySchedule {
         else -> DayOfWeek.SUNDAY
     }
     val date = day.subSequence(4, day.length) as String
-    val lessons = page.select(".step-content > div").map { subParseLesson(it) }
+    val lessons = page.select(".step-content > div").map { subParseLesson(it, teachers) }
     val dayMatch = "(\\d+)[\\s ]+(\\S+)".toRegex().find(date)
 
     val monthStr = dayMatch!!.groups[2]!!.value
@@ -68,7 +95,7 @@ fun subParseOneDaySchedule(page: Element): OneDaySchedule {
     return OneDaySchedule(lessons, dayOfWeek, SerializableDate(Calendar.getInstance().get(Calendar.YEAR), dayMonth.toShort(), dayDay))
 }
 
-fun subParseLesson(page: Element): ScheduleLesson {
+fun subParseLesson(page: Element, teachers: MutableList<TeacherLink>): ScheduleLesson {
     val type = when (page.select(".badge").text()) {
         "ЛК" -> ScheduleLessonType.LECTURE
         "ПЗ" -> ScheduleLessonType.SEMINAR
@@ -76,6 +103,7 @@ fun subParseLesson(page: Element): ScheduleLesson {
         "Экзамен" -> ScheduleLessonType.EXAM
         else -> ScheduleLessonType.Unknown
     }
+
     val name = page.child(0).text().removeSuffix(" ${page.select(".badge").text()}")
     val timeRange = page.child(1).child(0).text()
 
@@ -83,6 +111,10 @@ fun subParseLesson(page: Element): ScheduleLesson {
     val location: String
     if (page.child(1).children().size == 3) {
         teacher = page.child(1).child(1).text()
+
+        val teacherLink = page.child(1).child(1).select("a").attr("href")
+        teachers.add(TeacherLink(teacher, teacherLink))
+
         location = page.child(1).child(2).text()
     } else {
         teacher = ""

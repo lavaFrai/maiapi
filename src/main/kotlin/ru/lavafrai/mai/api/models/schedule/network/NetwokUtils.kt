@@ -8,9 +8,11 @@ import java.io.IOException
 
 fun getPage(url: String, args: Map<String, String> = mapOf(), attemptsLeft: Int = 50): Document {
     var builtUrl = url
-    if (!builtUrl.endsWith("?")) builtUrl += "?"
-    args.forEach {
-        builtUrl += "&${it.key}=${it.value}"
+    if (args.isNotEmpty()) {
+        if (!builtUrl.endsWith("?")) builtUrl += "?"
+        args.forEach {
+            builtUrl += "&${it.key}=${it.value}"
+        }
     }
     if (attemptsLeft < 0) throw IOException()
 
