@@ -18,7 +18,7 @@ fun parseSchedule(group: Group, teachers: MutableList<TeacherLink> = mutableList
         parseScheduleParseWeek(group, it, teachers)
     }
 
-    return Schedule(group, schedules);
+    return Schedule(group, System.currentTimeMillis() / 1000, schedules);
 }
 
 
@@ -29,7 +29,7 @@ fun parseTeacherSchedule(link: TeacherLink, teachers: MutableList<TeacherLink> =
         parseScheduleParseWeekByUrl("https://mai.ru/" + link.link, it, teachers)
     }
 
-    return Schedule(Group(link.name), schedules);
+    return Schedule(Group(link.name), System.currentTimeMillis() / 1000, schedules);
 }
 
 

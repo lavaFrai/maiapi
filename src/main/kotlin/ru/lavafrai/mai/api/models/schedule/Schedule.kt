@@ -8,6 +8,7 @@ import ru.lavafrai.mai.api.models.group.Group
 @Serializable
 data class Schedule (
     val group: Group,
+    val created: Long,
     val subSchedules: List<OneWeekSchedule>,
 ) {
     fun getWeeks(): List<ScheduleWeekId> {
@@ -32,5 +33,5 @@ data class Schedule (
 
 
 fun getEmptySchedule(): Schedule {
-    return Schedule(Group(""), listOf())
+    return Schedule(Group(""), 0, listOf())
 }
