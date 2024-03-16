@@ -1,21 +1,20 @@
-package ru.lavafrai.mai.api.models
+package ru.lavafrai.mai.api.models.time
 
 import kotlinx.serialization.Serializable
-import ru.lavafrai.mai.api.models.time.Date
 
 
 @Serializable
-class DateRange(
+data class DateRange(
     val startDate: Date,
     val endDate: Date,
 ) {
     operator fun contains(another: Date): Boolean {
-        return startDate <= another && endDate >= another
+        return another in startDate..endDate
     }
 
 
     override fun toString(): String {
-        return "${startDate.toString()} - ${endDate.toString()}"
+        return "$startDate - $endDate"
     }
 
     fun isNow(): Boolean {

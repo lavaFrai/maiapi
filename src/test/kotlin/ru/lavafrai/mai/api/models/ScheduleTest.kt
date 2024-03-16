@@ -2,23 +2,19 @@ package ru.lavafrai.mai.api.models
 
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import me.tongfei.progressbar.ProgressBar
 import org.junit.jupiter.api.Test
-import ru.lavafrai.mai.api.Api
 import ru.lavafrai.mai.api.models.group.Group
-import ru.lavafrai.mai.api.models.schedule.Schedule
 import ru.lavafrai.mai.api.parser.parseGroupsList
 import ru.lavafrai.mai.api.parser.parseSchedule
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicInteger
 import kotlin.collections.ArrayList
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-class ScheduleParserTest {
+class ScheduleTest {
     @Test
     fun `Groups list test`() {
         val groups = parseGroupsList()
@@ -27,7 +23,7 @@ class ScheduleParserTest {
     }
 
     @Test
-    fun `Group parse test`() {
+    fun `Schedule parse test`() {
         /*val groups = parseGroupsList()
         assertTrue(groups.isNotEmpty())
         val schedule = parseSchedule(groups[0])*/
@@ -49,6 +45,20 @@ class ScheduleParserTest {
 
         println(Json.encodeToString(schedules))
     }*/
+
+    @Test
+    fun `Get weeks test`() {
+        val schedule = parseSchedule(Group("М4О-106Б-23"))
+        assertNotNull(schedule)
+        println(schedule.getWeeks())
+    }
+
+    @Test
+    fun `Get current week test`() {
+        val schedule = parseSchedule(Group("М4О-106Б-23"))
+        assertNotNull(schedule)
+        println(Json.encodeToString(schedule.getCurrentWeekSchedule()))
+    }
 }
 
 fun <T, R> Iterable<T>.mapThreaded(

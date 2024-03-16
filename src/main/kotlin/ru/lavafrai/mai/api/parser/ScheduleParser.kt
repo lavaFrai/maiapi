@@ -6,7 +6,6 @@ import kotlinx.coroutines.runBlocking
 import ru.lavafrai.mai.api.models.group.Group
 import ru.lavafrai.mai.api.models.schedule.Schedule
 import ru.lavafrai.mai.api.models.schedule.TeacherId
-import ru.lavafrai.mai.api.models.schedule.raw.ScheduleRaw
 import ru.lavafrai.mai.api.models.schedule.raw.toSchedule
 import ru.lavafrai.mai.api.models.schedule.raw.toTeacherSchedule
 import ru.lavafrai.mai.api.network.getPageToResponse
@@ -20,7 +19,7 @@ fun parseSchedule(group: Group, teachers: MutableList<TeacherId> = mutableListOf
         println("Failed to parse $group"); return null
     }
 
-    val schedule = (runBlocking { response.bodyAsText() } as ScheduleRaw).toSchedule()
+    val schedule = runBlocking { response.bodyAsText() }.toSchedule()
     schedule.days.forEach { day ->
         day.lessons.forEach { lesson ->
             lesson.lectors.forEach { lector ->
@@ -38,7 +37,7 @@ fun parseTeacherSchedule(teacher: TeacherId, teachers: MutableList<TeacherId> = 
         println("Failed to parse ${teacher.name}"); return null
     }
 
-    val schedule = (runBlocking { response.bodyAsText() } as ScheduleRaw).toTeacherSchedule()
+    val schedule = runBlocking { response.bodyAsText() }.toTeacherSchedule()
     schedule.days.forEach { day ->
         day.lessons.forEach { lesson ->
             lesson.lectors.forEach { lector ->

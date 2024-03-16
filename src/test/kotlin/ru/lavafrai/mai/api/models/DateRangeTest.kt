@@ -3,6 +3,7 @@ package ru.lavafrai.mai.api.models
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import ru.lavafrai.mai.api.models.time.Date
+import ru.lavafrai.mai.api.models.time.DateRange
 
 class DateRangeTest {
     @Test

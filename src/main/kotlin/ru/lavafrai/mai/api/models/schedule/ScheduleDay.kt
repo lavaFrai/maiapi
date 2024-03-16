@@ -1,6 +1,5 @@
 package ru.lavafrai.mai.api.models.schedule
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.lavafrai.mai.api.models.time.Date
 import ru.lavafrai.mai.api.models.time.DayOfWeek

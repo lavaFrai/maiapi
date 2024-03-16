@@ -32,4 +32,12 @@ class SerializableDateTest {
         assertTrue(Date.parseMaiFormat("20230107").isSame(Date.parse("07.01.2023")))
         println(Date.parseMaiFormat("20230107"))
     }
+
+    @Test
+    fun `Get week test`() {
+        val week = Date.parse("16.03.2024").getWeek()
+        println(week)
+        assertTrue(week.startDate == Date.parse("11.03.2024"))
+        assertTrue(week.endDate == Date.parse("17.03.2024"))
+    }
 }

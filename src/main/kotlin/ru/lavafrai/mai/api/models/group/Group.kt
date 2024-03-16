@@ -1,6 +1,5 @@
 package ru.lavafrai.mai.api.models.group
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable

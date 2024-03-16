@@ -1,5 +1,6 @@
 package ru.lavafrai.mai.api.models.schedule.raw
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.lavafrai.mai.api.models.schedule.Classroom
 import ru.lavafrai.mai.api.models.schedule.TeacherId
@@ -9,8 +10,8 @@ import ru.lavafrai.mai.api.models.schedule.LessonType
 
 @Serializable
 data class LessonRaw(
-    val time_start: TimeRaw,
-    val time_end: TimeRaw,
+    @SerialName("time_start") val timeStart: TimeRaw,
+    @SerialName("time_end") val timeEnd: TimeRaw,
     val lector: Map<String, String>,
     val type: Map<LessonType, Int>,
     val room: Map<String, String>,
@@ -21,8 +22,8 @@ data class LessonRaw(
     fun toLesson(name: String): Lesson {
         return Lesson(
             name,
-            time_start.toTime(),
-            time_end.toTime(),
+            timeStart.toTime(),
+            timeEnd.toTime(),
             lector.map { TeacherId(it.value, it.key) },
             type.map { it.key }.first(),
             room.map { Classroom(it.value, it.key) },

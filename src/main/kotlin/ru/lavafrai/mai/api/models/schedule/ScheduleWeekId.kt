@@ -1,7 +1,7 @@
 package ru.lavafrai.mai.api.models.schedule
 
 import kotlinx.serialization.Serializable
-import ru.lavafrai.mai.api.models.DateRange
+import ru.lavafrai.mai.api.models.time.DateRange
 
 
 @Serializable
