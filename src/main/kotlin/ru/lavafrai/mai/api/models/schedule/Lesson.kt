@@ -19,7 +19,7 @@ data class Lesson(
 ) {
     fun getPairNumber(): Int {
         return when (timeRange) {
-            "09:00 – 10:30" -> 1
+            "9:00 – 10:30" -> 1
             "10:45 – 12:15" -> 2
             "13:00 – 14:30" -> 3
             "14:45 – 16:15" -> 4

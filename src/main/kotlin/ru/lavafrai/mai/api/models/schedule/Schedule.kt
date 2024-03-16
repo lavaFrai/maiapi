@@ -3,12 +3,13 @@ package ru.lavafrai.mai.api.models.schedule
 import kotlinx.serialization.Serializable
 import ru.lavafrai.mai.api.models.time.Date
 import ru.lavafrai.mai.api.models.time.castToSerializable
+import java.time.LocalDateTime
 
 
 @Serializable
 data class Schedule(
     val name: String,
-    val created: Long,
+    val created: Long = System.currentTimeMillis() / 1000,
     val cached: Long,
     val days: List<ScheduleDay>,
 ) {
