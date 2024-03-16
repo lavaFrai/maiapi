@@ -1,37 +1,49 @@
 package ru.lavafrai.mai.api.models.schedule
 
 import kotlinx.serialization.Serializable
-import ru.lavafrai.mai.api.models.SerializableDate
-import ru.lavafrai.mai.api.models.group.Group
+import ru.lavafrai.mai.api.models.time.Date
+import ru.lavafrai.mai.api.models.time.castToSerializable
 
 
 @Serializable
-data class Schedule (
-    val group: Group,
+data class Schedule(
+    val name: String,
     val created: Long,
-    val subSchedules: List<OneWeekSchedule>,
+    val cached: Long,
+    val days: List<ScheduleDay>,
 ) {
+    private var weeks: MutableList<ScheduleWeekId>? = null
+
     fun getWeeks(): List<ScheduleWeekId> {
-        return subSchedules.map { it.weekId }
+        if (weeks == null) {
+            weeks = mutableListOf()
+            days.forEachIndexed {
+                i, it -> val week = it.date!!.getWeek()
+                if (weeks!!.find {week == it.range} == null) weeks!!.add(ScheduleWeekId(i + 1, it.date.getWeek()))
+            }
+            weeks!!.sortBy { scheduleWeekId -> scheduleWeekId.range.startDate }
+        }
+
+        return weeks!!
     }
 
-    fun getWeek(number: Int): OneWeekSchedule? {
-        return subSchedules.find { it.weekId.number == number }
+    fun getWeek(number: Int): List<ScheduleDay> {
+        val weekId = getWeeks().find { it.number == number } ?: return listOf()
+        return days.filter { weekId.range.contains(it.date!!) }.sortedBy { it.date }
     }
 
-    fun getCurrentSubScheduleOrNull(): OneWeekSchedule? {
-        return subSchedules.find { SerializableDate.now() in it.weekId.range }
+    fun getCurrentWeekSchedule(): List<ScheduleDay> {
+        val week = Date.now().getWeek()
+        return days.filter { week.contains(it.date!!) }.sortedBy { it.date }
     }
 
-    fun getScheduleOfDay(day: SerializableDate): OneDaySchedule {
-        val week = subSchedules.find { day in it.weekId.range }
-        week ?: return getEmptyOneDaySchedule(day)
-        val daySchedule = week.days.find { day == it.date }
-        return daySchedule ?: getEmptyOneDaySchedule(day)
+    fun getScheduleOfDay(day: Date): ScheduleDay {
+        return days.find { it.date == day } ?: ScheduleDay(day, day.toLocalDate().dayOfWeek.castToSerializable(), listOf())
     }
 }
 
-
+/*
 fun getEmptySchedule(): Schedule {
-    return Schedule(Group(""), 0, listOf())
+return Schedule(Group(""), 0, listOf())
 }
+*/
