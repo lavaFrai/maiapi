@@ -22,8 +22,8 @@ data class Schedule(
             weeks = mutableListOf()
             days.forEach {
                 val week = it.date!!.getWeek()
-                if (weeks!!.find {week == it.range} == null) weeks!!.add(ScheduleWeekId(i, it.date.getWeek()))
-                i++
+                if (weeks!!.find {week == it.range} == null) {weeks!!.add(ScheduleWeekId(i, it.date.getWeek()));i++}
+
             }
             weeks!!.sortBy { scheduleWeekId -> scheduleWeekId.range.startDate }
         }
