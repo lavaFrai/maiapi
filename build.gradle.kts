@@ -19,8 +19,12 @@ dependencies {
     // implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
 
-    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    implementation("io.ktor:ktor-client-core:2.3.9")
+    implementation("io.ktor:ktor-client-cio:2.3.9")
+    implementation("me.tongfei:progressbar:0.10.0")
 
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    testImplementation("org.slf4j:slf4j-log4j12:2.0.12")
 }
 
 

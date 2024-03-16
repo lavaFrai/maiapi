@@ -1,16 +1,16 @@
-package ru.lavafrai.mai.api.models
+package ru.lavafrai.mai.api.models.time
 
 import kotlinx.serialization.Serializable
 import java.util.*
 
 
 @Serializable
-data class SerializableDate (
+data class Date (
     val year: Int = 0,
     val month: Short = 0,
     val day: Short = 0,
 ) {
-    fun isLaterThan(another: SerializableDate): Boolean {
+    fun isLaterThan(another: Date): Boolean {
         return if (year == another.year) {
             if (month == another.month) {
                 day > another.day
@@ -18,17 +18,17 @@ data class SerializableDate (
         } else year > another.year
     }
 
-    fun isEarlierThan(another: SerializableDate): Boolean {
+    fun isEarlierThan(another: Date): Boolean {
         return !(isLaterThan(another) || isSame(another))
     }
 
-    fun isSame(another: SerializableDate): Boolean {
+    fun isSame(another: Date): Boolean {
         return  year == another.year &&
                 month == another.month &&
                 day == another.day
     }
 
-    operator fun compareTo(another: SerializableDate): Int {
+    operator fun compareTo(another: Date): Int {
         return when {
             isSame(another) -> 0
             isLaterThan(another) -> 1
@@ -42,42 +42,41 @@ data class SerializableDate (
     }
 
     companion object {
-        fun now(): SerializableDate {
+        fun now(): Date {
             val calendar = Calendar.getInstance()
-            return SerializableDate(
+            return Date(
                 calendar.get(Calendar.YEAR),
                 (calendar.get(Calendar.MONTH) + 1).toShort(),
                 calendar.get(Calendar.DAY_OF_MONTH).toShort(),
             )
         }
 
-        fun parse(string: String): SerializableDate {
+        fun parse(string: String): Date {
             val match = "(\\d{2})\\.(\\d{2})\\.(\\d{4})".toRegex().find(string)!!
-            return SerializableDate(
+            return Date(
                 match.groups[3]!!.value.toInt(),
                 match.groups[2]!!.value.toShort(),
                 match.groups[1]!!.value.toShort(),
             )
         }
 
-        fun of(calendar: Calendar): SerializableDate {
-            return SerializableDate(
+        fun of(calendar: Calendar): Date {
+            return Date(
                 year = calendar.get(Calendar.YEAR),
                 month = (calendar.get(Calendar.MONTH) + 1).toShort(),
                 day = calendar.get(Calendar.DAY_OF_MONTH).toShort(),
             )
         }
 
-        fun ofYearLess(calendar: Calendar): SerializableDate {
-            return SerializableDate(
+        fun ofYearLess(calendar: Calendar): Date {
+            return Date(
                 month = (calendar.get(Calendar.MONTH) + 1).toShort(),
                 day = calendar.get(Calendar.DAY_OF_MONTH).toShort(),
             )
         }
+
+        fun parseMaiFormat(date: String): Date {
+            return Date.parse("${date.substring(6..7)}.${date.substring(4..5)}.${date.substring(0..3)}")
+        }
     }
-}
-
-
-fun main() {
-    println(SerializableDate.parse("09.02.2024").toString())
 }

@@ -1,17 +1,16 @@
 package ru.lavafrai.mai.api.models.schedule
 
 import kotlinx.serialization.Serializable
-import ru.lavafrai.mai.api.models.SerializableDate
-import ru.lavafrai.mai.api.models.group.Group
 
 
 @Serializable
 data class Schedule (
-    val group: Group,
+    val name: String,
     val created: Long,
-    val subSchedules: List<OneWeekSchedule>,
+    val cached: Long,
+    val days: List<ScheduleDay>,
 ) {
-    fun getWeeks(): List<ScheduleWeekId> {
+    /*fun getWeeks(): List<ScheduleWeekId> {
         return subSchedules.map { it.weekId }
     }
 
@@ -28,10 +27,11 @@ data class Schedule (
         week ?: return getEmptyOneDaySchedule(day)
         val daySchedule = week.days.find { day == it.date }
         return daySchedule ?: getEmptyOneDaySchedule(day)
-    }
+    }*/
 }
 
-
+/*
 fun getEmptySchedule(): Schedule {
     return Schedule(Group(""), 0, listOf())
 }
+*/

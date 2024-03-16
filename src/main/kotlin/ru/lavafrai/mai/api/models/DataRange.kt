@@ -1,14 +1,15 @@
 package ru.lavafrai.mai.api.models
 
 import kotlinx.serialization.Serializable
+import ru.lavafrai.mai.api.models.time.Date
 
 
 @Serializable
 class DateRange(
-    val startDate: SerializableDate,
-    val endDate: SerializableDate,
+    val startDate: Date,
+    val endDate: Date,
 ) {
-    operator fun contains(another: SerializableDate): Boolean {
+    operator fun contains(another: Date): Boolean {
         return startDate <= another && endDate >= another
     }
 
@@ -18,15 +19,15 @@ class DateRange(
     }
 
     fun isNow(): Boolean {
-        return SerializableDate.now() in this
+        return Date.now() in this
     }
 
 
     companion object {
         fun parse(string: String): DateRange {
             return DateRange(
-                SerializableDate.parse(string.split(" - ")[0]),
-                SerializableDate.parse(string.split(" - ")[1]),
+                Date.parse(string.split(" - ")[0]),
+                Date.parse(string.split(" - ")[1]),
             )
         }
     }

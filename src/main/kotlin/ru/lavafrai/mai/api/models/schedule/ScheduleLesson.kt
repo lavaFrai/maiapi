@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 data class ScheduleLesson(
     val name: String,
     val timeRange: String,
-    val type: ScheduleLessonType,
+    val type: LessonType,
     val teacher: String,
     val location: String,
 

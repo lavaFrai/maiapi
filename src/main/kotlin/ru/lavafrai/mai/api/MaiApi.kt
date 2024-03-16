@@ -2,38 +2,28 @@ package ru.lavafrai.mai.api
 
 import ru.lavafrai.mai.api.models.group.Group
 import ru.lavafrai.mai.api.models.schedule.Schedule
-import ru.lavafrai.mai.api.models.schedule.TeacherLink
+import ru.lavafrai.mai.api.models.schedule.TeacherId
 import ru.lavafrai.mai.api.parser.parseGroupsList
 import ru.lavafrai.mai.api.parser.parseSchedule
 import ru.lavafrai.mai.api.parser.parseTeacherSchedule
 
-class Api private constructor() {
-    private val teachers: MutableList<TeacherLink> = ArrayList()
+object Api {
+    private val teachers: MutableList<TeacherId> = ArrayList()
 
 
-    fun getSchedule(group: Group): Schedule {
+    fun getSchedule(group: Group): Schedule? {
         return parseSchedule(group, teachers)
     }
 
     fun getGroups(): List<Group> {
-        return parseGroupsList()
+        return parseGroupsList().filter { it.name != "Для внеучебных мероприятий (служебная)" }
     }
 
-    fun getTeachersSchedule(link: TeacherLink): Schedule {
+    fun getTeachersSchedule(link: TeacherId): Schedule? {
         return parseTeacherSchedule(link)
     }
 
-    fun getTeachersList(): List<TeacherLink> {
+    fun getTeachersList(): List<TeacherId> {
         return teachers
-    }
-
-    companion object {
-        private var instance: Api? = null
-
-        @Synchronized
-        fun getInstance(): Api {
-            if (instance == null) instance = Api()
-            return instance!!
-        }
     }
 }
