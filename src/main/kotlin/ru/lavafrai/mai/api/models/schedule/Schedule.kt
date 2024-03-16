@@ -16,11 +16,14 @@ data class Schedule(
     private var weeks: MutableList<ScheduleWeekId>? = null
 
     fun getWeeks(): List<ScheduleWeekId> {
+        var i = 1
+
         if (weeks == null) {
             weeks = mutableListOf()
-            days.forEachIndexed {
-                i, it -> val week = it.date!!.getWeek()
-                if (weeks!!.find {week == it.range} == null) weeks!!.add(ScheduleWeekId(i + 1, it.date.getWeek()))
+            days.forEach {
+                val week = it.date!!.getWeek()
+                if (weeks!!.find {week == it.range} == null) weeks!!.add(ScheduleWeekId(i, it.date.getWeek()))
+                i++
             }
             weeks!!.sortBy { scheduleWeekId -> scheduleWeekId.range.startDate }
         }
