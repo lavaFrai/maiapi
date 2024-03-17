@@ -2,6 +2,7 @@ package ru.lavafrai.mai.api.models.time
 
 import kotlinx.serialization.Serializable
 import java.time.LocalDate
+import java.time.temporal.TemporalUnit
 import java.util.*
 
 
@@ -29,6 +30,30 @@ data class Date (
                 day == another.day
     }
 
+    fun plus(field: Int, amount: Int): Date {
+        val calendar = toCalendar()
+        calendar.add(field, amount)
+        return calendar.toDate()
+    }
+
+    fun plusDays(amount: Int): Date {
+        val calendar = toCalendar()
+        calendar.add(Calendar.DAY_OF_MONTH, amount)
+        return calendar.toDate()
+    }
+
+    fun minus(field: Int, amount: Int): Date {
+        val calendar = toCalendar()
+        calendar.add(field, -amount)
+        return calendar.toDate()
+    }
+
+    fun minusDays(amount: Int): Date {
+        val calendar = toCalendar()
+        calendar.add(Calendar.DAY_OF_MONTH, -amount)
+        return calendar.toDate()
+    }
+
     override operator fun compareTo(other: Date): Int {
         return when {
             isSame(other) -> 0
@@ -41,7 +66,7 @@ data class Date (
     fun toCalendar(): Calendar {
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.YEAR, this.year)
-        calendar.set(Calendar.MONTH, this.month)
+        calendar.set(Calendar.MONTH, this.month - 1)
         calendar.set(Calendar.DAY_OF_MONTH, this.day)
         return calendar
     }

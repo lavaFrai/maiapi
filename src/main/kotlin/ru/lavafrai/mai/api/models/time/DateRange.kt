@@ -1,6 +1,7 @@
 package ru.lavafrai.mai.api.models.time
 
 import kotlinx.serialization.Serializable
+import java.util.Calendar
 
 
 @Serializable
@@ -19,6 +20,25 @@ data class DateRange(
 
     fun isNow(): Boolean {
         return Date.now() in this
+    }
+
+    fun plus(field: Int, amount: Int): DateRange {
+        return DateRange(
+                startDate.plus(field, amount),
+                endDate.plus(field, amount)
+        )
+    }
+
+    fun minus(field: Int, amount: Int): DateRange {
+        return plus(field, -amount)
+    }
+
+    fun plusDays(amount: Int): DateRange {
+        return plus(Calendar.DATE, amount)
+    }
+
+    fun minusDays(amount: Int): DateRange {
+        return minus(Calendar.DATE, amount)
     }
 
 
