@@ -14,7 +14,7 @@ fun TeacherScheduleRaw.toTeacherSchedule(): Schedule {
 
     return Schedule(
         jsonObject["name"]?.jsonPrimitive?.content!!,
-        0,
+        System.currentTimeMillis() / 1000,
         0,
         jsonObject["schedule"]!!.jsonObject.map { TolerantJson.decodeFromJsonElement<TeacherScheduleDayRaw>(it.value).toScheduleDay(it.value.jsonObject["date"]?.jsonPrimitive?.content) }
     )

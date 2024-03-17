@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 @Serializable
 data class Schedule(
     val name: String,
-    val created: Long = System.currentTimeMillis() / 1000,
+    val created: Long,
     val cached: Long,
     val days: List<ScheduleDay>,
 ) {

@@ -15,7 +15,7 @@ fun ScheduleRaw.toSchedule(): Schedule {
     return Schedule(
 
         jsonObject["group"]?.jsonPrimitive?.content!!,
-        0,
+        System.currentTimeMillis() / 1000,
         0,
         jsonObject.filter { it.key != "group" }.map { TolerantJson.decodeFromJsonElement<ScheduleDayRaw>(it.value).toScheduleDay(it.key) }
     )
