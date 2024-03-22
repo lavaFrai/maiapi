@@ -7,3 +7,5 @@ infix fun <T> (() -> T).errorCase(onError: () -> T): T {
         onError()
     }
 }
+
+fun String.capitalizeWords(): String = split(" ").joinToString(" ") { it.lowercase().capitalize() }
