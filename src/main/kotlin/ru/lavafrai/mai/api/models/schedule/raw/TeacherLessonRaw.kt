@@ -6,6 +6,7 @@ import ru.lavafrai.mai.api.models.schedule.Classroom
 import ru.lavafrai.mai.api.models.schedule.TeacherId
 import ru.lavafrai.mai.api.models.schedule.Lesson
 import ru.lavafrai.mai.api.models.schedule.LessonType
+import ru.lavafrai.mai.api.models.time.Date
 import ru.lavafrai.mai.api.parser.md5
 
 
@@ -18,13 +19,14 @@ data class TeacherLessonRaw(
     val types: List<LessonType>,
     val rooms: Map<String, String>,
 ) {
-    fun toLesson(): Lesson {
+    fun toLesson(day: Date?): Lesson {
         return Lesson(
             name,
             timeStart.toTime(),
             timeEnd.toTime(),
             groups.map { TeacherId(it, md5(it)) },
             types.map { it }.first(),
+            day,
             rooms.map { Classroom(it.value, it.key) },
             "",
             "",

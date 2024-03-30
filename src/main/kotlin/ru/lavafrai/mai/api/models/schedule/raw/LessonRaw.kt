@@ -7,6 +7,7 @@ import ru.lavafrai.mai.api.models.schedule.Classroom
 import ru.lavafrai.mai.api.models.schedule.TeacherId
 import ru.lavafrai.mai.api.models.schedule.Lesson
 import ru.lavafrai.mai.api.models.schedule.LessonType
+import ru.lavafrai.mai.api.models.time.Date
 
 
 @Serializable
@@ -20,13 +21,14 @@ data class LessonRaw(
     val teams: String,
     val other: String,
 ) {
-    fun toLesson(name: String): Lesson {
+    fun toLesson(name: String, day: Date?): Lesson {
         return Lesson(
             name,
             timeStart.toTime(),
             timeEnd.toTime(),
             lector.map { TeacherId(it.value.capitalizeWords(), it.key) },
             type.map { it.key }.first(),
+            day,
             room.map { Classroom(it.value, it.key) },
             lms,
             teams,

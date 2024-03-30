@@ -7,7 +7,7 @@ import ru.lavafrai.mai.api.parser.parseGroupsList
 import ru.lavafrai.mai.api.parser.parseSchedule
 import ru.lavafrai.mai.api.parser.parseTeacherSchedule
 
-object Api {
+object MaiApi {
     private val teachers: MutableList<TeacherId> = ArrayList()
 
 

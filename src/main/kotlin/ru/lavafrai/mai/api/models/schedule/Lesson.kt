@@ -2,6 +2,7 @@ package ru.lavafrai.mai.api.models.schedule
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ru.lavafrai.mai.api.models.time.Date
 import ru.lavafrai.mai.api.models.time.Time
 
 @Serializable
@@ -11,6 +12,7 @@ data class Lesson(
     @SerialName("time_end") val timeEnd: Time,
     val lectors: List<TeacherId>,
     val type: LessonType,
+    val day: Date?,
     val rooms: List<Classroom>,
     val lms: String,
     val teams: String,
@@ -28,5 +30,9 @@ data class Lesson(
             "20:00 – 21:30" -> 7
             else -> 0
         }
+    }
+
+    fun getUid(): Int {
+        return "$day ${getPairNumber()}".hashCode()
     }
 }

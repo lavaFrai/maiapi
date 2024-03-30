@@ -34,7 +34,7 @@ class ScheduleTest {
 
     /*@Test
     fun `All groups test`() {
-        val groups = Api.getGroups()
+        val groups = MaiApi.getGroups()
         val i = AtomicInteger(280)
         val schedules: MutableList<Schedule?> = mutableListOf()
 
@@ -51,6 +51,16 @@ class ScheduleTest {
         val schedule = parseSchedule(Group("М4О-106Б-23"))
         assertNotNull(schedule)
         println(schedule.getWeeks())
+    }
+
+    @Test
+    fun `Lesson hash test`() {
+        val schedule = parseSchedule(Group("М4О-106Б-23"))
+        assertNotNull(schedule)
+
+        val lessons = schedule.days.flatMap { it.lessons }.map { it.getUid() }
+        assertTrue { lessons.toSet().size == lessons.size }
+        println(lessons)
     }
 
     @Test

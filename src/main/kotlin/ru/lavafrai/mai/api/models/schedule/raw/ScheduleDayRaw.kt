@@ -19,7 +19,11 @@ data class ScheduleDayRaw (
         return ScheduleDay(
             if (date != null) { {Date.parseMaiFormat(date)} errorCase {Date.parse(date)} } else null,
             dayOfWeek,
-            lessons.map { TolerantJson.decodeFromJsonElement<LessonRaw>(it.value.values.first()).toLesson(it.value.keys.first()) }
+            lessons.map {
+                TolerantJson.decodeFromJsonElement<LessonRaw>(it.value.values.first()).toLesson(
+                    it.value.keys.first(),
+                    if (date != null) { {Date.parseMaiFormat(date)} errorCase {Date.parse(date)} } else null)
+            }
         )
     }
 }
