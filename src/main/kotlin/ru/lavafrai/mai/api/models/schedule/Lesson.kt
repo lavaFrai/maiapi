@@ -33,6 +33,6 @@ data class Lesson(
     }
 
     fun getUid(): Int {
-        return "$day ${getPairNumber()}".hashCode()
+        return "$name $day ${getPairNumber()}".hashCode()
     }
 }
