@@ -33,10 +33,6 @@ tasks.test {
     maxParallelForks = 6
 }
 
-kotlin {
-    jvmToolchain(11)
-}
-
 publishing {
     publications {
         create<MavenPublication>("Maven") {
