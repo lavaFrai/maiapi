@@ -1,8 +1,8 @@
 plugins {
-    kotlin("jvm") version "1.8.21"
+    kotlin("jvm") version "1.9.22"
 
     id("maven-publish")
-    kotlin("plugin.serialization") version "1.6.20"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.22"
 }
 
 group = "ru.lavafrai.mai.api"
