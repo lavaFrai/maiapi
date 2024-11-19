@@ -33,7 +33,7 @@ tasks.test {
 }
 
 kotlin {
-    jvmToolchain(17)
+
 }
 
 publishing {
